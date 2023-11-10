@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+   
+	<script src="setting.js"></script>
+    <script src="HTTPlink.js"></script>
+ <script>
+    SQObj=
+    {
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "intent": "order",
+        "code": {
+            "coding": [
+            {
+                "system": "http://snomed.info/sct",
+                "code": "248243006",
+                "display": "Fatigue"
+            }
+            ],
+            "text": "Fatigue"
+        },
+        "subject": {
+            "reference": "Patient/12345",
+        },
+        "basedOn": [
+            {
+                "reference": "ServiceRequest/233333"
+            }
+        ],
+        "note": [
+            {
+            "text": "患者報告感到極度疲倦。"
+            }
+        ],
+        "occurrenceDateTime": "2023-10-13T10:30:00+00:00",
+    }
+
+
+     
+	 
+   function postData() {
+       SQObj.subject.reference = "Patient/"+document.getElementById("ID").value;
+       SQObj.basedOn[0].reference = "ServiceRequest/"+document.getElementById("SQID").value;
+       SQObj.occurrenceDateTime = document.getElementById("time").value;
+
+       var jsonStr = JSON.stringify(SQObj);
+       alert(jsonStr);
+
+       var apiURL;
+       apiURL = FHIRrootURL + '/' + "ServiceRequest?based-on=ServiceRequest/"+document.getElementById("SQID").value;
+
+       HTTPPostData(apiURL, jsonStr);
+	}
+</script>	
+<body style="height: 780px">
+      <h3>放射治療之ServiceRequest(小)</h3>
+      病人ID: <input type="text" id="ID" />  <br/> <br/>
+      參考的ServiceRequest之ID: <input type="text" id="SQID" />  <br/> <br/>
+      回診時間: <input type="text" id="time" />  <br/> <br/>
+      <br/>
+      <input id="Button1" onclick="postData()"  type="button" value="postData" />
+</body>
+
+</html>

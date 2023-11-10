@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+   
+	<script src="setting.js"></script>
+    <script src="HTTPlink.js"></script>
+ <script>
+    SQObj= 
+    {
+        "resourceType": "ServiceRequest",
+        "status": "active",
+        "code": {
+            "coding": [
+            {
+                "system": "http://snomed.info/sct",
+                "code": "248243006",
+                "display": "Fatigue"
+            }
+            ],
+            "text": "Fatigue"
+        },
+        "subject": {
+            "reference": "Patient/12345",
+        },
+        "note": [
+            {
+            "text": "患者報告感到極度疲倦。"
+            }
+        ],
+        "occurrencePeriod": {
+            "start": "2023-10-13T10:30:00",
+            "end": "2023-10-13T11:30:00"
+        },
+        "extension": [
+            {
+            "url": "http://example.com/extensions#numberOfOccurrences",
+            "valueInteger": 5
+            }
+        ]
+    }
+
+     
+	 
+   function postData() {
+     /*   var data = myObj.valueQuantity.value;
+       alert(data);  */
+      // alert("aaaa");
+       SQObj.subject.reference = "Patient/"+document.getElementById("ID").value;
+       SQObj.occurrencePeriod.start = document.getElementById("first").value;
+       SQObj.occurrencePeriod.end = document.getElementById("end").value;
+       SQObj.extension.valueInteger = document.getElementById("times").value;
+       var id=document.getElementById("ID").value;
+
+       var jsonStr = JSON.stringify(SQObj);
+       alert(jsonStr);
+
+       var apiURL;
+       apiURL = FHIRrootURL + '/' + "ServiceRequest?subject="+id;
+      // alert(apiURL);
+       HTTPPostData(apiURL, jsonStr);
+	}
+</script>	
+<body style="height: 780px">
+      <h3>放射治療之ServiceRequest(大)</h3>
+      病人ID: <input type="text" id="ID" />  <br/> <br/>
+      治療起始時間: <input type="text" id="first" />  <br/> <br/>
+      治療結束時間: <input type="text" id="end" />  <br/>
+      <br/>
+      所需治療次數: <input type="text" name="gender" id="times"><br><br>
+      <input id="Button1" onclick="postData()"  type="button" value="postData" />
+</body>
+
+</html>
