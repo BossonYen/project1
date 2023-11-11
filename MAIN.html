@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <style type="text/css">
+        #Button1 {
+            height: 43px;
+            width: 140px;
+        }
+        table, th, td {
+            border: 1px solid black;        
+        }  
+    </style>
+
+ <!--JS Document-->
+ <script src="HTTPlink.js"></script>   
+ <script src="Cookie.js"></script> 
+ <script src="AddTableEvent.js"></script> 
+
+<script>	
+var myObj;
+function callBack() { 
+    myObj= JSON.parse(ret);  //把JSON格式資料转换为 JavaScript 对象
+    
+    document.getElementById("start").innerHTML="治療開始時間: "+ myObj.entry[0].resource.occurrencePeriod.start;
+    document.getElementById("end").innerHTML="治療結束時間: "+ myObj.entry[0].resource.occurrencePeriod.end;
+    document.getElementById("count").innerHTML="治療次數: "+ myObj.entry[0].resource.extension[0].valueInteger;
+
+    var tableStr = "<tr> <th >ServiceRequestid</th><th>回診日期</th>";
+    if(myObj.entry!=undefined)
+    {
+        for (var i = 1; i < myObj.entry.length; i++) 
+        {
+            var trStr = "<tr>";
+
+            trStr = trStr + "<td>";
+            trStr = trStr + myObj.entry[i].resource.id;
+            trStr = trStr + "</td>";
+
+            trStr = trStr + "<td>";
+            trStr = trStr + myObj.entry[i].resource.occurrenceDateTime;
+            tableStr = tableStr + trStr;
+        }
+        document.getElementById("t1").innerHTML = tableStr;
+    }
+} 
+function showData() 
+{
+    HTTPGetData("http://hapi.fhir.org/baseR4/ServiceRequest?subject="+document.getElementById("ID").value);        
+}
+   </script>			
+
+</head>
+<body style="height: 780px">
+<h2>ServiceRequest查詢</h2>
+      <p>
+        <h3>要搜尋的病人的ID: <input id="ID" type="text"/></h3>
+        <p id="start"></p>
+        <p id="end"></p>
+        <p id="count"></p>
+        <input id="Button1" onclick="showData();" type="button" value="搜尋" /></p>
+        <table id = "t1" border="1px"></table><br/>
+</body>
+
+</html>
