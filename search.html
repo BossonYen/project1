@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data</title>
+</head>
+<body onload="load()">
+    <p>JSON顯示</p>
+<script src="HTTPlink.js"></script>   
+ <script src="Cookie.js"></script> 
+ <script src="AddTableEvent.js"></script> 
+    <div id="data"></div>
+    <style type="text/css">
+        #Button1 {
+            height: 43px;
+            width: 140px;
+        }
+        table, th, td {
+            border: 1px solid black;        
+        }  
+    </style>
+
+    <script>
+        var response;
+        var data;
+        async function fetchData() {
+            response = await fetch('https://bossonyen.github.io/project1/DFP.js');
+            data = await response.json();
+            document.getElementById('data').innerText = JSON.stringify(data, null, 2);
+        }
+
+        fetchData();
+        load();
+        function load()
+        {
+            var tableStr = "<tr> <th>檢查時間</th><th>數值(mmhg)</th></tr>";
+
+            for (i = 0; i < data.entry.length; i++) {
+                var trStr = "<tr>";
+
+                trStr = trStr + "<td>";
+                trStr = trStr + data.entry[i].resource.effectiveDateTime;
+                trStr = trStr + "</td>";
+
+                trStr = trStr + "<td>";
+                trStr = trStr + data.entry[i].resource.valueQuantity.value;
+                trStr = trStr + "</td>";
+
+                trStr = trStr + "</tr>";
+                tableStr = tableStr + trStr;
+            }
+
+            document.getElementById("t1").innerHTML = tableStr;
+
+            document.getElementById("t1").style.visibility = "visible";
+        }
+        
+    </script>
+</body>
+</html>
+
+ <!--JS Document-->
